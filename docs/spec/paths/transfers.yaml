@@ -1,0 +1,55 @@
+get:
+  summary: Get transfers
+  tags:
+    - Get transfers
+  operationId: getTransfers
+  parameters:
+    - $ref: '#/components/parameters/pageNumberParam'
+    - $ref: '#/components/parameters/pageLimitParam'
+    - $ref: '#/components/parameters/sortingParam'
+    - in: query
+      name: 'page[limit]'
+      required: false
+      schema:
+        type: string
+    - in: query
+      name: 'page[offset]'
+      required: false
+      schema:
+        type: string
+    - name: from
+      in: query
+      required: false
+      description: Transfer Sender
+      schema:
+        type: string
+        description: Transfer sender address
+    - name: to
+      in: query
+      required: false
+      description: Transfer Receiver
+      schema:
+        type: string
+        description: Transfer receiver address
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transfer'
+              links:
+                type: object
+                description: "Provides links for pagination"
+                properties:
+                  next:
+                    type: string
+                    description: "link to the next page"
+                  self:
+                    type: string
+                    description: "link to the current page"

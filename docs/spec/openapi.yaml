@@ -1,0 +1,8 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: usdc-tracker-svc
+  description: USDC Transfer Tracking service
+servers:
+  - url: 'http://localhost:8000/integrations/usdc-tracker-svc'
+    description: USDC Transfer Tracker Developer Server

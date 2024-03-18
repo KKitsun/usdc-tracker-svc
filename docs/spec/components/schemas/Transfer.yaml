@@ -1,0 +1,29 @@
+allOf:
+  - $ref: '#/components/schemas/TransferKey'
+  - type: object
+    properties:
+      attributes:
+        type: object
+        required:
+            - txhash
+            - from_address
+            - to_address
+            - value_decimal
+        properties:
+          txhash:
+            type: string
+            example: '0xba5049ae474d580101aaf3f63993b92763f74b37a895a2b3d64b9e6b52cd9bda'
+            description: Transaction hash
+          from_address:
+            type: string
+            example: '0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640'
+            description: Sender address
+          to_address:
+            type: string
+            example: '0x5f515f6c524b18ca30f7783fb58dd4be2e9904ec'
+            description: Receiver address
+          value_decimal:
+            type: string
+            example: 79113.4859
+            description: Transfered USDC value
+
