@@ -12,7 +12,6 @@ import (
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 )
 
@@ -22,8 +21,8 @@ const (
 )
 
 func EventsListener(client *ethclient.Client, tStorage storage.TransferStorage) {
-	logTransferSig := []byte("Transfer(address,address,uint256)")
-	logTransferSigHash := crypto.Keccak256Hash(logTransferSig)
+	// logTransferSig := []byte("Transfer(address,address,uint256)")
+	// logTransferSigHash := crypto.Keccak256Hash(logTransferSig)
 
 	contractAddress := common.HexToAddress(usdcContractAddr)
 	query := ethereum.FilterQuery{
@@ -41,7 +40,7 @@ func EventsListener(client *ethclient.Client, tStorage storage.TransferStorage) 
 		case err := <-sub.Err():
 			log.Fatal(err)
 		case vLog := <-logs:
-			if vLog.Topics[0].Hex() == logTransferSigHash.Hex() {
+			if vLog.Topics[0].Hex() == logTransferSigHash {
 				if len(vLog.Topics) != 3 {
 					continue
 				}
