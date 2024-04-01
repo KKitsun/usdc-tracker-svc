@@ -32,12 +32,13 @@ func (s *service) run(cfg config.Config) error {
 }
 
 func runTransferSaver(cfg config.Config, wg *sync.WaitGroup) {
+	client, contract := cfg.EthereumConnection()
 	wg.Add(1)
 	go func() {
 		defer func() {
 			wg.Done()
 		}()
-		transfer_saver.EventsListener(cfg.EthereumConnection(), postgres.NewTransferStorage(cfg.DB()))
+		transfer_saver.EventsListener(client, contract, postgres.NewTransferStorage(cfg.DB()))
 	}()
 }
 

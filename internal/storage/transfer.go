@@ -8,6 +8,7 @@ type TransferQ interface {
 
 	FilterBySender(from_address ...string) TransferQ
 	FilterByReceiver(to_address ...string) TransferQ
+	FilterByCounterparty(address ...string) TransferQ
 }
 
 type Transfer struct {

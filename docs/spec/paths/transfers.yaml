@@ -7,24 +7,14 @@ get:
     - $ref: '#/components/parameters/pageNumberParam'
     - $ref: '#/components/parameters/pageLimitParam'
     - $ref: '#/components/parameters/sortingParam'
-    - in: query
-      name: 'page[limit]'
-      required: false
-      schema:
-        type: string
-    - in: query
-      name: 'page[offset]'
-      required: false
-      schema:
-        type: string
-    - name: from
+    - name: filter[from]
       in: query
       required: false
       description: Transfer Sender
       schema:
         type: string
         description: Transfer sender address
-    - name: to
+    - name: filter[to]
       in: query
       required: false
       description: Transfer Receiver

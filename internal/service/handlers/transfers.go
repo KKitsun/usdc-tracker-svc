@@ -13,52 +13,33 @@ import (
 func GetTransfer(w http.ResponseWriter, r *http.Request) {
 	db := DB(r)
 
-	sender := requests.NewGetSender(r)
-	receiver := requests.NewGetReceiver(r)
+	// requestFilter, err := requests.NewGetFilter(r)
+	// if err != nil {
+	// 	ape.RenderErr(w, problems.BadRequest(err)...)
+	// 	return
+	// }
 
-	if sender != nil && receiver != nil {
-		transfer, err := db.Transfer().FilterBySender(sender...).FilterByReceiver(receiver...).Select()
-		if err != nil {
-			Log(r).WithError(err).Error("failed to query db")
-			ape.RenderErr(w, problems.InternalError())
-			return
-		}
+	from := requests.NewGetSender(r)
+	to := requests.NewGetReceiver(r)
+	counterparty := requests.NewGetCounterparty(r)
 
-		ape.Render(w, models.NewTransfersListModel(transfer, "", "", "", "", "http://"+r.Host+r.URL.Path+"?"+r.URL.RawQuery))
-		return
+	query := db.Transfer()
+	if from != nil {
+		query = query.FilterBySender(from...)
+	}
+	if to != nil {
+		query = query.FilterByReceiver(to...)
+	}
+	if counterparty != nil {
+		query = query.FilterByCounterparty(counterparty...)
+	}
 
-	} else if sender != nil {
-		transfer, err := db.Transfer().FilterBySender(sender...).Select()
-		if err != nil {
-			Log(r).WithError(err).Error("failed to query db")
-			ape.RenderErr(w, problems.InternalError())
-			return
-		}
-
-		ape.Render(w, models.NewTransfersListModel(transfer, "", "", "", "", "http://"+r.Host+r.URL.Path+"?"+r.URL.RawQuery))
-		return
-
-	} else if receiver != nil {
-		transfer, err := db.Transfer().FilterByReceiver(receiver...).Select()
-		if err != nil {
-			Log(r).WithError(err).Error("failed to query db")
-			ape.RenderErr(w, problems.InternalError())
-			return
-		}
-
-		ape.Render(w, models.NewTransfersListModel(transfer, "", "", "", "", "http://"+r.Host+r.URL.Path+"?"+r.URL.RawQuery))
-		return
-
-	} else {
-		transfer, err := db.Transfer().Select()
-		if err != nil {
-			Log(r).WithError(err).Error("failed to query db")
-			ape.RenderErr(w, problems.InternalError())
-			return
-		}
-
-		ape.Render(w, models.NewTransfersListModel(transfer, "", "", "", "", "http://"+r.Host+r.URL.Path))
+	transfer, err := query.Select()
+	if err != nil {
+		Log(r).WithError(err).Error("failed to query db")
+		ape.RenderErr(w, problems.InternalError())
 		return
 	}
+	ape.Render(w, models.NewTransfersListModel(transfer, "", "", "", "", "http://"+r.Host+r.URL.Path+"?"+r.URL.RawQuery))
 
 }

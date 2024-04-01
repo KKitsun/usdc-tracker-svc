@@ -10,7 +10,7 @@ import (
 )
 
 type EthereumConnecter interface {
-	EthereumConnection() *ethclient.Client
+	EthereumConnection() (*ethclient.Client, string)
 }
 
 type ethereumConnecter struct {
@@ -25,7 +25,8 @@ func NewEthereumConnecter(getter kv.Getter) EthereumConnecter {
 }
 
 type ethereumConnecterCfg struct {
-	URL string `fig:"url,required"`
+	URL          string `fig:"url,required"`
+	USDCContract string `fig:"usdc,required"`
 }
 
 func (ec *ethereumConnecter) readConfig() ethereumConnecterCfg {
@@ -40,9 +41,9 @@ func (ec *ethereumConnecter) readConfig() ethereumConnecterCfg {
 	return config
 }
 
-func (ec *ethereumConnecter) EthereumConnection() *ethclient.Client {
+func (ec *ethereumConnecter) EthereumConnection() (*ethclient.Client, string) {
+	config := ec.readConfig()
 	return ec.once.Do(func() interface{} {
-		config := ec.readConfig()
 
 		ethClient, err := ethclient.Dial(config.URL)
 		if err != nil {
@@ -50,5 +51,5 @@ func (ec *ethereumConnecter) EthereumConnection() *ethclient.Client {
 		}
 
 		return ethClient
-	}).(*ethclient.Client)
+	}).(*ethclient.Client), config.USDCContract
 }
