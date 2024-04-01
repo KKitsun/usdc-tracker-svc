@@ -13,25 +13,25 @@ import (
 func GetTransfer(w http.ResponseWriter, r *http.Request) {
 	db := DB(r)
 
-	// requestFilter, err := requests.NewGetFilter(r)
-	// if err != nil {
-	// 	ape.RenderErr(w, problems.BadRequest(err)...)
-	// 	return
-	// }
+	requestFilter, err := requests.NewGetFilter(r)
+	if err != nil {
+		ape.RenderErr(w, problems.BadRequest(err)...)
+		return
+	}
 
-	from := requests.NewGetSender(r)
-	to := requests.NewGetReceiver(r)
-	counterparty := requests.NewGetCounterparty(r)
+	// from := requests.NewGetSender(r)
+	// to := requests.NewGetReceiver(r)
+	// counterparty := requests.NewGetCounterparty(r)
 
 	query := db.Transfer()
-	if from != nil {
-		query = query.FilterBySender(from...)
+	if requestFilter.From != "" {
+		query = query.FilterBySender(requestFilter.From)
 	}
-	if to != nil {
-		query = query.FilterByReceiver(to...)
+	if requestFilter.To != "" {
+		query = query.FilterByReceiver(requestFilter.To)
 	}
-	if counterparty != nil {
-		query = query.FilterByCounterparty(counterparty...)
+	if requestFilter.Counterparty != "" {
+		query = query.FilterByCounterparty(requestFilter.Counterparty)
 	}
 
 	transfer, err := query.Select()
