@@ -19,10 +19,6 @@ func GetTransfer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// from := requests.NewGetSender(r)
-	// to := requests.NewGetReceiver(r)
-	// counterparty := requests.NewGetCounterparty(r)
-
 	query := db.Transfer()
 	if requestFilter.From != "" {
 		query = query.FilterBySender(requestFilter.From)
